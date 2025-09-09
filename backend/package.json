@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-  "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
+    "dev": "concurrently \"npm run build:watch\" \"npm run serve\"",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "nodemon dist/index.js",
@@ -37,6 +37,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^4.2.1",
-    "nodemailer": "^7.0.6"
+    "nodemailer": "^7.0.6",
+    "zod": "^4.1.5"
   }
 }
