@@ -1,7 +1,7 @@
 import client from "../config/prismaClient.js"
 import { TaskStatus } from "@prisma/client"
 
-export async function createTaskService({title, type, link = null, why, tags, reminderDate, userId} : {title : string, type : any, link: string | null, why : string, tags : string[], reminderDate : Date, userId : number} ){
+export async function createTaskService({title, type, link = null, why, tags = [], reminderDate, userId} : {title : string, type : any, link: string | null, why : string, tags ?: string[], reminderDate : Date, userId : number} ){
 
    const task = await client.task.create({
     data : {

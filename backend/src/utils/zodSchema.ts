@@ -18,7 +18,7 @@ export const taskCreationSchema = z.object({
     type: z.string().nonempty("Select the type"),
     link: z.string().optional(),
     why: z.string().nonempty("Enter why this task is important"),
-    tags: z.array(z.string()),
+    tags: z.array(z.string()).default([]),
     reminderDate: z
       .string()
       .nonempty("Reminder date is required")

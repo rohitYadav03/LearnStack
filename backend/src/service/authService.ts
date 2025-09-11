@@ -29,12 +29,7 @@ export async function signupUserService({username , password, email} : {username
         }
     })
 
-
-
     return user; 
-    // why here we are not using try catch and
-    //  how we will get to know what is the controller will pass
-
 }
 
 export async function signinService(username: string , password : string){
@@ -55,7 +50,7 @@ export async function signinService(username: string , password : string){
     throw new Error("Incorrect Password")
    }
    
-   const jwtToken =  jwt.sign({id : userDetails.id, username : userDetails.username , email : userDetails.email},jwtPassword as string, {expiresIn : "30d"}) // give as string to know the ts what is the type of jwtPassword
+   const jwtToken =  jwt.sign({id : userDetails.id, username : userDetails.username , email : userDetails.email},jwtPassword as string, {expiresIn : "30d"})
 
    return jwtToken;
 

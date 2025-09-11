@@ -20,6 +20,7 @@ export  async  function createTaskController(req : Request , res :Response) {
         console.log("ERROR : ");
         console.log(error.message.Argument);
         
+        console.log("insde tag creation controller", error);
         
         return res.status(400).json({message : error.message })
     }

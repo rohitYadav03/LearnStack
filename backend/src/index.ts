@@ -2,7 +2,8 @@ import express from "express"
 import { PORT } from "./config/serverConfig.js";
 import v1Router from "./routes/routes.js";
 import cookieParser from "cookie-parser";
-
+import "./scheduler/reminderScheduler.js";
+import "./jobs/emailWorker.js"
 const app = express();
 
 app.use(express.json())
