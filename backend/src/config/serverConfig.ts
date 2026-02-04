@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-dotenv.config()
+dotenv.config(); // dotenv load them at runtime 
 
 
 export const PORT = process.env.PORT

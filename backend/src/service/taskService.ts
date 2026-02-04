@@ -12,7 +12,7 @@ export async function createTaskService({title, type, link = null, why, tags = [
         reminderDate,
         userId
     }
-   })
+   });
 
    for(let eachTag of tags){
    
@@ -36,6 +36,7 @@ if(!tagExist){
             taskId : task.id
         }
     })
+    
 }else {
     await client.taskTag.create({
     data : {
@@ -44,9 +45,6 @@ if(!tagExist){
     }
 })
 }
-
-// now push it into the tasktag table if the tag alredy exist 
-
 
 }
 
@@ -80,7 +78,8 @@ return allUserTasks;
 }
 
 export const  getTaskByIdService = async (id : number, userId : number) => {
-     const taskDetails = await client.task.findFirst({
+     
+    const taskDetails = await client.task.findFirst({
         where : {
             id : id,
             userId : userId
@@ -109,7 +108,6 @@ type UpdateTaskInput = {
 
 export const updateTaskByIDService = async(taskId : number, userId : number, data : UpdateTaskInput) => {
 
-
 const updatedTask = await client.task.update({
     where : {
         userId : userId,
@@ -135,10 +133,9 @@ export const deleteTaskByIdService = async(taskId : number,userId : number) => {
     })
 
     if(!taskBelongToUser){
-        return "Task doesnt belong to the user"
+        throw new Error("Task does not belong to user");
+        
     }
-
-    console.log("task : ", taskBelongToUser);
     // no here it come means that the task belong to user and want to delete so delete form the task tabel first 
 
      await client.taskTag.deleteMany({
@@ -147,7 +144,7 @@ export const deleteTaskByIdService = async(taskId : number,userId : number) => {
         }
     })
 
-    // now it is delted from task tabel now we can delete form the task tabel
+// now it is delted from taskTag tabel now we can delete form the task tabel
     const deleteTask = await client.task.delete({
         where : {
                  id : taskId

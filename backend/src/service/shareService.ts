@@ -1,15 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import client from '../config/prismaClient.js';
 import type { TaskStatus, TaskType } from '@prisma/client';
-import { title } from 'process';
 
 
 export const enableShareService = async(userId : number) => {
-    // first we will genrate the random link then we will store it inide the use link section 
-    // for that we should use uuid
 
- const randomLink =   uuidv4();
-  const link =  randomLink.slice(0,8);
+const randomLink =   uuidv4();
+const link =  randomLink.slice(0,8);
     
   const enableSharing = await client.user.update({
     where : {
@@ -59,12 +56,10 @@ const checkUserInfo = await client.user.findFirst({
         shareLink : shareLink
     }
 })
-console.log("c : ",checkUserInfo);
 
 if(!checkUserInfo){
     return "not found"
 }
-    // then we will send all the task of that user
 
     const allUserTasks = await client.task.findMany({
         where : {
@@ -85,6 +80,8 @@ if(!checkUserInfo){
             }
         }
     })
+
+    
 
     const tansformedTasks : otherUserInfo[] = allUserTasks.map(task => (
         {

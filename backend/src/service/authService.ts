@@ -27,7 +27,7 @@ export async function signupUserService({username , password, email} : {username
             password : hashPassword,
             email : email
         }
-    })
+    });
 
     return user; 
 }

@@ -1,9 +1,7 @@
-import { title } from "process";
-import {email, z} from "zod"
-
+import { z} from "zod"
 
 export const signupSchema = z.object({
-    username : z.string().nonempty("Enter the username").min(3, "Minimum of 3").max(10, "maximum 0f 10"),
+    username : z.string().nonempty("Enter the username").min(3, "Minimum of 3").max(100, "maximum 0f 10"),
     email : z.string().email("Invalid Email"),
     password : z.string().min(6, "Password must be at least 6 characters")
 })
@@ -16,7 +14,7 @@ export const signInSchema = z.object({
 export const taskCreationSchema = z.object({
     title: z.string().nonempty("Enter the title"),
     type: z.string().nonempty("Select the type"),
-    link: z.string().optional(),
+    link: z.string().nullable().optional(),
     why: z.string().nonempty("Enter why this task is important"),
     tags: z.array(z.string()).default([]),
     reminderDate: z

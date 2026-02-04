@@ -2,21 +2,16 @@ import schedule from "node-schedule"
 import client from "../config/prismaClient.js"
 import emailQueue from "../jobs/emailQueue.js"
 
-console.log("Inside the reminder schedule ");
 
-let num = 1;
 
-const job = schedule.scheduleJob('*/1 * * * *', async() => {
-      console.log(`🚀 SCHEDULER EXECUTED - Run #${num} - Time: ${new Date().toISOString()}`);
-    num++;
-
+// nodejs khud call krtha hai on the basis of the time 
+const job = schedule.scheduleJob('*/10 * * * *', async() => {
     try {
-    console.log("About to query database...");
 
     const allTasks = await client.task.findMany({
                     where : {
                         reminderDate : {
-                            lte : new Date()
+                            lte : new Date() // reminder is alredy passed or or now 
                         },
                         lastReminderSentAt : null,
                         status : "IN_PROGRESS"
@@ -28,11 +23,9 @@ const job = schedule.scheduleJob('*/1 * * * *', async() => {
                         }
                        }
                     }
-                })
+    })
         
          if (allTasks.length === 0) {
-            console.log("No tasks found, skipping...");
-        console.log(`[${new Date().toISOString()}] No reminder tasks due`);
             return;
         }
 
@@ -43,12 +36,14 @@ const job = schedule.scheduleJob('*/1 * * * *', async() => {
                     subject: task.title,
                     body: task.why,
                     html: `<p>${task.why}</p> <p>Link: <a href="${task.link}">${task.link}</a></p>` 
-                });
+                }, { attempts : 3  ,
+                     backoff  : {
+                        type : "exponential",
+                        delay : 5000
+                     }
+                    
+                    });
 
-                await client.task.update({
-                    where: { id: task.id },
-                    data: { lastReminderSentAt: new Date() }
-                });
                 
                 console.log(`✅ Reminder queued for task ${task.id}`);
                 
@@ -58,7 +53,9 @@ const job = schedule.scheduleJob('*/1 * * * *', async() => {
         }
     } catch (error) {
         console.error('❌ SCHEDULER ERROR:', error);
-
     }
 })
+
 console.log("Reminder job scheduled successfully");
+
+

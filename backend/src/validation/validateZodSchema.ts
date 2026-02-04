@@ -1,13 +1,16 @@
 import type { NextFunction, Request, Response } from "express";
 import type { ZodObject } from "zod";
 import {z} from "zod"
+
 const validate = (schema : ZodObject) => {
+  
     return (req : Request,res : Response,next : NextFunction) => {
         try {
          schema.parse(req.body);
          next();
         } catch (error : any) {
-            console.log("Inside the validate : ", error);
+  console.error("Validate middleware error", error);
+
    if (error instanceof z.ZodError) {
   // Map Zod issues to a field: message object
   const formattedErrors: Record<string, string> = {};
@@ -24,7 +27,6 @@ const validate = (schema : ZodObject) => {
 
 // Fallback for other types of errors
 return res.status(500).json({ message: (error as Error).message });
-
         }
     }
 }
