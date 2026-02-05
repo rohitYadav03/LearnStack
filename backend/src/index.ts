@@ -9,14 +9,20 @@ import cors from "cors"
 
 const app = express();
 
+
 app.use(cors({
   origin: true,
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 }));
 
+
 app.use(express.json());
 app.use(cookieParser());
+
+app.get("/", (req, res) => {
+    res.send("Working..")
+})
 
 app.use("/api/v1", v1Router);
 
