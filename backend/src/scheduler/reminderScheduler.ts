@@ -1,6 +1,7 @@
 import schedule from "node-schedule"
 import client from "../config/prismaClient.js"
 import emailQueue from "../jobs/emailQueue.js"
+import { Prisma } from "@prisma/client"
 
 
 
@@ -31,19 +32,22 @@ const job = schedule.scheduleJob('*/10 * * * *', async() => {
 
         for(const task of allTasks) {
             try {
+               
                 await emailQueue.add("email", {
                     to: task.user.email,
                     subject: task.title,
                     body: task.why,
                     html: `<p>${task.why}</p> <p>Link: <a href="${task.link}">${task.link}</a></p>` 
-                }, { attempts : 3  ,
-                     backoff  : {
-                        type : "exponential",
-                        delay : 5000
-                     }
-                    
-                    });
+                });
 
+             await client.task.update({
+                where : {
+                    id : task.id
+                },
+                data : {
+                    lastReminderSentAt : new Date()
+                }
+             })
                 
                 console.log(`✅ Reminder queued for task ${task.id}`);
                 
